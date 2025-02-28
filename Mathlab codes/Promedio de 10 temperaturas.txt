@@ -1,0 +1,34 @@
+% Código MATLAB para calcular el promedio de las últimas 10 temperaturas
+
+% Configuración de canal
+readChannelID = 2854019;  
+readAPIKey = 'WPI9EPE9GGB4TIEO';
+
+writeChannelID = 2854019;
+writeAPIKey = 'DMNMMZ9NEI8S23PP';
+
+%% Read Data %%
+% Se leen los últimos 10 datos del field1 (donde se registra la temperatura)
+data = thingSpeakRead( ...
+    readChannelID, ...
+    'Fields', 1, ...       % Ajusta si tu dato está en otro field
+    'NumPoints', 10, ...
+    'ReadKey', readAPIKey ...
+);
+
+%% Analyze Data %%
+if length(data) < 10
+    disp('No hay suficientes datos para calcular el promedio.');
+else
+    promedio = mean(data);
+    disp(['Promedio de las últimas 10 temperaturas: ', num2str(promedio)]);
+    
+    %% Write Data %%
+    % Se escribe el promedio en field2
+    thingSpeakWrite( ...
+        writeChannelID, ...
+        promedio, ...
+        'Fields', 2, ...  % Ajusta si deseas escribir en otro field
+        'WriteKey', writeAPIKey ...
+    );
+end
